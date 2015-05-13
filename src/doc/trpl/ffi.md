@@ -215,7 +215,7 @@ C code:
 
 ```c
 typedef void (*rust_callback)(int32_t);
-rust_callback cb;
+rust_callback cb = (rust_callback)NULL;
 
 int32_t register_callback(rust_callback callback) {
     cb = callback;
@@ -223,7 +223,8 @@ int32_t register_callback(rust_callback callback) {
 }
 
 void trigger_callback() {
-  cb(7); // Will call callback(7) in Rust
+  if(cb)
+    cb(7); // Will call callback(7) in Rust
 }
 ```
 
@@ -283,7 +284,7 @@ C code:
 ```c
 typedef void (*rust_callback)(void*, int32_t);
 void* cb_target;
-rust_callback cb;
+rust_callback cb = (rust_callback)NULL;
 
 int32_t register_callback(void* callback_target, rust_callback callback) {
     cb_target = callback_target;
@@ -292,7 +293,8 @@ int32_t register_callback(void* callback_target, rust_callback callback) {
 }
 
 void trigger_callback() {
-  cb(cb_target, 7); // Will call callback(&rustObject, 7) in Rust
+  if(cb)
+    cb(cb_target, 7); // Will call callback(&rustObject, 7) in Rust
 }
 ```
 
